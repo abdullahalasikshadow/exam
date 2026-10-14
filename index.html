@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>৩য় বর্ষের পরীক্ষার রুটিন ও লাইভ কাউন্টডাউন</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Hind Siliguri"', 'sans-serif'],
+                        number: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#030712',
+                            card: '#0f172a',
+                            gold: '#fbbf24',
+                            amber: '#f59e0b',
+                            accent: '#3b82f6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styling for Ultra-Premium Feel */
+        body {
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 12px 35px -10px rgba(245, 158, 11, 0.15);
+        }
+
+        .timer-box {
+            background: linear-gradient(145deg, rgba(30, 27, 18, 0.8), rgba(20, 18, 12, 0.9));
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .glow-title {
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen py-8 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
+
+    <div class="max-w-4xl mx-auto space-y-8">
+        
+        <!-- Header Section -->
+        <header class="text-center space-y-3 pt-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs sm:text-sm font-medium tracking-wide mb-1">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                অনার্স ৩য় বর্ষ • ২০২৫ সালের পরীক্ষা
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-bold text-white tracking-tight glow-title">
+                ৩য় বর্ষের পরীক্ষার রুটিন
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base font-normal max-w-lg mx-auto">
+                জাতীয় বিশ্ববিদ্যালয় • বিষয়: <span class="text-amber-400 font-semibold">পরিসংখ্যান (Statistics)</span>
+            </p>
+        </header>
+
+        <!-- Exam Routine & Countdown List Container -->
+        <main id="exam-container" class="space-y-5">
+            <!-- Dynamic cards will be rendered here via JS -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center pt-6 pb-4 border-t border-slate-800/60 text-slate-500 text-xs">
+            <p>© ABDULLAH AL ASIK</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript Engine -->
+    <script>
+        const exams = [
+            {
+                code: "২৩৩৬০১",
+                name: "Sampling Distribution",
+                dateStr: "২৫ নভেম্বর ২০২৬ • বুধবার • দুপুর ১:০০",
+                targetDate: "2026-11-25T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৩",
+                name: "Statistical Inference",
+                dateStr: "২৯ নভেম্বর ২০২৬ • রবিবার • দুপুর ১:০০",
+                targetDate: "2026-11-29T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৫",
+                name: "Regression Analysis",
+                dateStr: "২ ডিসেম্বর ২০২৬ • বুধবার • দুপুর ১:০০",
+                targetDate: "2026-12-02T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৭",
+                name: "Design of Experiments",
+                dateStr: "৬ ডিসেম্বর ২০২৬ • রবিবার • দুপুর ১:০০",
+                targetDate: "2026-12-06T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৯",
+                name: "Applied Statistics",
+                dateStr: "৯ ডিসেম্বর ২০২৬ • বুধবার • দুপুর ১:০০",
+                targetDate: "2026-12-09T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬১১",
+                name: "Introduction to Computer and SPSS",
+                dateStr: "১৩ ডিসেম্বর ২০২৬ • রবিবার • দুপুর ১:০০",
+                targetDate: "2026-12-13T13:00:00+06:00"
+            }
+        ];
+
+        // Convert English numbers to standard Bengali digits
+        function toBengaliNum(num) {
+            const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return num.toString().padStart(2, '0').replace(/\d/g, d => bengaliDigits[d]);
+        }
+
+        // Render Cards Initial Layout
+        function initLayout() {
+            const container = document.getElementById('exam-container');
+            container.innerHTML = exams.map((exam, index) => `
+                <div class="glass-card rounded-2xl p-5 sm:p-6 transition-all duration-300 relative overflow-hidden group">
+                    
+                    <!-- Progress Bar Background (Dynamic) -->
+                    <div id="progress-bar-${index}" class="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-yellow-300 transition-all duration-1000" style="width: 100%"></div>
+
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+                        
+                        <!-- Exam Info -->
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-0.5 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400 font-number font-semibold text-xs tracking-wider">
+                                    ${exam.code}
+                                </span>
+                                <span id="badge-${index}" class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">
+                                    অপেক্ষা করা হচ্ছে
+                                </span>
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-300 transition-colors">
+                                ${exam.name}
+                            </h2>
+                            <div class="flex items-center gap-2 text-slate-400 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>${exam.dateStr}</span>
+                            </div>
+                        </div>
+
+                        <!-- Live Timer Grid -->
+                        <div id="timer-grid-${index}" class="grid grid-cols-4 gap-2 sm:gap-3 text-center w-full lg:w-auto">
+                            <!-- Live numbers inserted via JS -->
+                        </div>
+
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Live Timer Calculation Loop
+        function updateCountdowns() {
+            const now = new Date().getTime();
+            const totalAnnouncedTime = 60 * 24 * 60 * 60 * 1000; // Reference range (60 days) for progress calculation
+
+            exams.forEach((exam, index) => {
+                const target = new Date(exam.targetDate).getTime();
+                const diff = target - now;
+
+                const timerGrid = document.getElementById(`timer-grid-${index}`);
+                const progressBar = document.getElementById(`progress-bar-${index}`);
+                const badge = document.getElementById(`badge-${index}`);
+
+                if (!timerGrid) return;
+
+                // Progress Bar update
+                const percentage = Math.max(0, Math.min(100, (diff / totalAnnouncedTime) * 100));
+                if (progressBar) progressBar.style.width = `${percentage}%`;
+
+                // If Exam completed or currently live
+                if (diff <= 0) {
+                    if (diff > -14400000) { // Within 4 hours of exam start time
+                        badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 animate-pulse";
+                        badge.innerText = "পরীক্ষা চলছে";
+                    } else {
+                        badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-500";
+                        badge.innerText = "সম্পন্ন";
+                    }
+
+                    timerGrid.className = "w-full lg:w-auto flex items-center justify-center";
+                    timerGrid.innerHTML = `
+                        <div class="w-full bg-red-950/40 border border-red-800/50 text-red-300 py-3 px-6 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                            পরীক্ষার সময় অতিক্রান্ত হয়ে গেছে!
+                        </div>
+                    `;
+                    return;
+                }
+
+                // If upcoming
+                if (diff < 86400000 * 3) { // Less than 3 days remaining
+                    badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 animate-pulse";
+                    badge.innerText = "খুবই আসন্ন!";
+                } else {
+                    badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400";
+                    badge.innerText = "আসন্ন";
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                timerGrid.innerHTML = `
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-300 tracking-tight">${toBengaliNum(days)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">দিন</span>
+                    </div>
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-300 tracking-tight">${toBengaliNum(hours)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">ঘণ্টা</span>
+                    </div>
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-300 tracking-tight">${toBengaliNum(minutes)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">মিনিট</span>
+                    </div>
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all border-amber-500/50 shadow-lg shadow-amber-500/5">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-400 tracking-tight">${toBengaliNum(seconds)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">সেকেন্ড</span>
+                    </div>
+                `;
+            });
+        }
+
+        // Initialize App
+        initLayout();
+        updateCountdowns();
+        setInterval(updateCountdowns, 1000);
+    </script>
+</body>
+</html>
