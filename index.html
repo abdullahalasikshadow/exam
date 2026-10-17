@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>৩য় বর্ষের পরীক্ষার রুটিন ও লাইভ কাউন্টডাউন</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-
+    
     <script>
         tailwind.config = {
             theme: {
@@ -16,6 +18,15 @@
                     fontFamily: {
                         sans: ['"Hind Siliguri"', 'sans-serif'],
                         number: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#030712',
+                            card: '#0f172a',
+                            gold: '#fbbf24',
+                            amber: '#f59e0b',
+                            accent: '#3b82f6'
+                        }
                     }
                 }
             }
@@ -23,421 +34,233 @@
     </script>
 
     <style>
-        html { scroll-behavior: smooth; }
-
+        /* Custom Styling for Ultra-Premium Feel */
         body {
-            background: #eef0f4;
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: #1e2430;
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
         }
 
-        /* ---------- White liquid backdrop ---------- */
-        .backdrop {
-            position: fixed; inset: 0; z-index: -1; overflow: hidden;
-            background:
-                radial-gradient(90% 60% at 15% 5%, #ffffff 0%, transparent 60%),
-                radial-gradient(80% 60% at 90% 95%, #ffffff 0%, transparent 62%),
-                linear-gradient(165deg, #f7f8fb 0%, #e8ebf0 40%, #f9fafc 70%, #e3e6ec 100%);
-        }
-        .blob { position: absolute; border-radius: 50%; filter: blur(50px); will-change: transform; }
-        .blob.b1 { width: 44vmax; height: 44vmax; left: -12vmax; top: -10vmax;
-            background: radial-gradient(circle at 35% 35%, rgba(255,255,255,1), rgba(196,202,213,0.75) 60%, transparent 74%);
-            animation: float1 22s ease-in-out infinite alternate; }
-        .blob.b2 { width: 38vmax; height: 38vmax; right: -14vmax; top: 18vh;
-            background: radial-gradient(circle at 60% 40%, rgba(255,255,255,0.95), rgba(170,177,190,0.6) 55%, transparent 74%);
-            animation: float2 26s ease-in-out infinite alternate; }
-        .blob.b3 { width: 40vmax; height: 40vmax; left: 8vw; bottom: -16vmax;
-            background: radial-gradient(circle at 40% 40%, rgba(255,255,255,1), rgba(185,191,203,0.7) 55%, transparent 74%);
-            animation: float3 30s ease-in-out infinite alternate; }
-        .blob.b4 { width: 24vmax; height: 24vmax; right: 14vw; bottom: 6vh;
-            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95), rgba(160,167,180,0.5) 55%, transparent 74%);
-            animation: float1 34s ease-in-out infinite alternate-reverse; }
-
-        @keyframes float1 { to { transform: translate3d(10vw, 12vh, 0) scale(1.15); } }
-        @keyframes float2 { to { transform: translate3d(-14vw, -10vh, 0) scale(1.1); } }
-        @keyframes float3 { to { transform: translate3d(12vw, -14vh, 0) scale(1.2); } }
-
-        .caustics { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none;
-            opacity: .5; mix-blend-mode: multiply; }
-
-        /* interactive water surface (cursor ripples) */
-        #water { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
-
-        .grain {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .05; mix-blend-mode: multiply;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
-        /* ---------- Liquid glass surface ---------- */
-        .glass {
-            position: relative;
-            background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0.10) 100%);
-            -webkit-backdrop-filter: blur(9px) saturate(210%) contrast(1.06);
-            backdrop-filter: blur(9px) saturate(210%) contrast(1.06);
-            box-shadow:
-                inset 0 2px 2px rgba(255,255,255,0.95),
-                inset 0 -2px 3px rgba(120,130,150,0.18),
-                inset 1px 0 1px rgba(255,255,255,0.6),
-                inset -1px 0 1px rgba(255,255,255,0.4),
-                inset 0 0 36px rgba(255,255,255,0.10),
-                inset 0 -14px 24px -12px rgba(90,100,125,0.16),
-                0 1px 2px rgba(40,50,70,0.14),
-                0 30px 60px -20px rgba(40,50,75,0.45);
-            isolation: isolate;
-            transition: transform .45s cubic-bezier(.2,.9,.25,1.2), box-shadow .45s ease;
-        }
-        .glass::before {
-            content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.2px;
-            background: linear-gradient(145deg,
-                rgba(255,255,255,1) 0%, rgba(255,255,255,0.35) 28%,
-                rgba(150,160,178,0.25) 60%, rgba(255,255,255,0.95) 100%);
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude;
-            pointer-events: none; z-index: 2;
-        }
-        .glass::after {
-            content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
-            background: radial-gradient(420px circle at var(--mx, 20%) var(--my, 0%),
-                rgba(255,255,255,0.55), rgba(255,255,255,0.12) 35%, transparent 60%);
-            opacity: .8; transition: opacity .3s;
-        }
-        .glass-card:hover { transform: translateY(-4px) scale(1.008); }
-        .glass-card:active { transform: scale(.995); }
-
-        .glass-sm {
-            border-radius: 20px;
-            background: linear-gradient(160deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
-            -webkit-backdrop-filter: blur(6px) saturate(200%) contrast(1.05);
-            backdrop-filter: blur(6px) saturate(200%) contrast(1.05);
-            box-shadow:
-                inset 0 2px 2px rgba(255,255,255,1),
-                inset 0 -3px 6px rgba(120,130,150,0.18),
-                inset 0 0 14px rgba(255,255,255,0.12),
-                0 12px 22px -10px rgba(40,50,75,0.5);
-            position: relative;
-        }
-        .glass-sm::before {
-            content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
-            background: linear-gradient(160deg, rgba(255,255,255,1), rgba(255,255,255,0.2) 40%, rgba(150,160,178,0.3));
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+        .glass-card:hover {
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 12px 35px -10px rgba(245, 158, 11, 0.15);
         }
 
-        .pill {
-            border-radius: 999px; position: relative;
-            background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.03));
-            -webkit-backdrop-filter: blur(6px) saturate(200%) contrast(1.05);
-            backdrop-filter: blur(6px) saturate(200%) contrast(1.05);
-            box-shadow: inset 0 1.5px 1px rgba(255,255,255,1), inset 0 -1.5px 3px rgba(120,130,150,0.2), 0 6px 14px -6px rgba(40,50,75,0.35);
-        }
-        .pill-amber { background: linear-gradient(180deg, rgba(255,226,140,0.40), rgba(251,191,36,0.10)); }
-        .pill-green { background: linear-gradient(180deg, rgba(150,240,200,0.40), rgba(52,211,153,0.10)); }
-        .pill-red   { background: linear-gradient(180deg, rgba(255,190,190,0.40), rgba(248,113,113,0.10)); }
-
-        .track {
-            height: 10px; border-radius: 999px; overflow: hidden;
-            background: rgba(120,130,150,0.18);
-            box-shadow: inset 0 2px 4px rgba(60,70,90,0.25), inset 0 -1px 1px rgba(255,255,255,0.8);
-        }
-        .fill {
-            height: 100%; border-radius: 999px; transition: width 1s linear;
-            background: linear-gradient(180deg, #fde68a, #f59e0b);
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.9), 0 0 12px rgba(245,158,11,0.5);
+        .timer-box {
+            background: linear-gradient(145deg, rgba(30, 27, 18, 0.8), rgba(20, 18, 12, 0.9));
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
         }
 
-        /* ---------- Liquid glass TEXT ---------- */
-        /* big text: translucent glass lettering with a rim and a bright lower edge */
-        .gt {
-            display: inline-block;
-            background: linear-gradient(180deg,
-                rgba(255,255,255,0.98) 0%, rgba(214,222,236,0.70) 42%, rgba(110,126,158,0.62) 100%);
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-fill-color: transparent; color: transparent;
-            -webkit-text-stroke: 0.8px rgba(95,110,142,0.62);
-            filter:
-                drop-shadow(0 -0.5px 0 rgba(255,255,255,0.9))
-                drop-shadow(0 1.5px 0 rgba(255,255,255,0.95))
-                drop-shadow(0 5px 7px rgba(40,50,80,0.30));
-        }
-        .gt-amber {
-            background: linear-gradient(180deg,
-                rgba(255,243,196,0.98) 0%, rgba(253,205,90,0.78) 45%, rgba(234,140,10,0.70) 100%);
-            -webkit-background-clip: text; background-clip: text;
-            -webkit-text-stroke: 0.8px rgba(180,100,10,0.65);
-        }
-        /* small text: etched glass look (translucent ink + bright bottom edge) */
-        .gt-sm {
-            color: rgba(40,52,82,0.66);
-            text-shadow:
-                0 1px 0 rgba(255,255,255,0.95),
-                0 0 1px rgba(255,255,255,0.7),
-                0 3px 6px rgba(40,50,80,0.16);
-        }
-        .gt-sm-amber {
-            color: rgba(150,80,5,0.74);
-            text-shadow: 0 1px 0 rgba(255,255,255,0.95), 0 3px 6px rgba(150,80,5,0.18);
-        }
-        .gt-sm-green { color: rgba(5,100,70,0.76); text-shadow: 0 1px 0 rgba(255,255,255,0.95); }
-        .gt-sm-red   { color: rgba(150,30,30,0.76); text-shadow: 0 1px 0 rgba(255,255,255,0.95); }
-
-        @keyframes pop { from { opacity: 0; transform: translateY(24px) scale(.97); } to { opacity: 1; transform: none; } }
-        .enter { animation: pop .8s cubic-bezier(.2,.9,.25,1) both; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .blob, .enter { animation: none; }
+        .glow-title {
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
         }
     </style>
 </head>
-<body class="py-8 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-amber-300/60">
-
-    <div class="backdrop">
-        <div class="blob b1"></div>
-        <div class="blob b2"></div>
-        <div class="blob b3"></div>
-        <div class="blob b4"></div>
-    </div>
-    <svg class="caustics" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <filter id="caustic" x="0" y="0" width="100%" height="100%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.010 0.018" numOctaves="3" seed="7" result="n">
-                <animate attributeName="baseFrequency" dur="40s" values="0.010 0.018;0.018 0.010;0.010 0.018" repeatCount="indefinite"/>
-            </feTurbulence>
-            <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.42  0 0 0 0 0.45  0 0 0 0 0.52  4 0 0 0 -1.8"/>
-        </filter>
-        <rect width="100%" height="100%" filter="url(#caustic)"/>
-    </svg>
-    <canvas id="water" aria-hidden="true"></canvas>
-    <div class="grain"></div>
+<body class="text-slate-100 min-h-screen py-8 px-4 sm:px-6 lg:px-8 font-sans antialiased selection:bg-amber-500 selection:text-slate-950">
 
     <div class="max-w-4xl mx-auto space-y-8">
-
-        <header class="glass rounded-[32px] text-center px-6 py-8 sm:py-10 space-y-4 enter">
-            <div class="pill pill-amber inline-flex items-center gap-2 px-4 py-1.5 text-xs sm:text-sm font-medium tracking-wide">
-                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_#f59e0b]"></span>
-                <span class="gt-sm-amber">অনার্স ৩য় বর্ষ • ২০২৫ সালের পরীক্ষা</span>
+        
+        <!-- Header Section -->
+        <header class="text-center space-y-3 pt-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs sm:text-sm font-medium tracking-wide mb-1">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                অনার্স ৩য় বর্ষ • ২০২৫ সালের পরীক্ষা
             </div>
-            <h1 class="text-3xl sm:text-5xl font-bold tracking-tight relative z-10">
-                <span class="gt">৩য় বর্ষের পরীক্ষার রুটিন</span>
+            <h1 class="text-3xl sm:text-5xl font-bold text-white tracking-tight glow-title">
+                ৩য় বর্ষের পরীক্ষার রুটিন
             </h1>
-            <p class="gt-sm text-sm sm:text-base max-w-lg mx-auto relative z-10">
-                জাতীয় বিশ্ববিদ্যালয় • বিষয়: <span class="gt-sm-amber font-semibold">পরিসংখ্যান (Statistics)</span>
+            <p class="text-slate-400 text-sm sm:text-base font-normal max-w-lg mx-auto">
+                জাতীয় বিশ্ববিদ্যালয় • বিষয়: <span class="text-amber-400 font-semibold">পরিসংখ্যান (Statistics)</span>
             </p>
         </header>
 
-        <main id="exam-container" class="space-y-5"></main>
+        <!-- Exam Routine & Countdown List Container -->
+        <main id="exam-container" class="space-y-5">
+            <!-- Dynamic cards will be rendered here via JS -->
+        </main>
 
-        <footer class="text-center pt-2 pb-4 text-xs">
-            <div class="pill inline-block px-4 py-1.5"><span class="gt-sm">© ABDULLAH AL ASIK</span></div>
+        <!-- Footer -->
+        <footer class="text-center pt-6 pb-4 border-t border-slate-800/60 text-slate-500 text-xs">
+            <p>© ABDULLAH AL ASIK</p>
         </footer>
+
     </div>
 
+    <!-- JavaScript Engine -->
     <script>
-        /* ================= Water ripples (cursor / touch) ================= */
-        (function () {
-            const cv = document.getElementById('water');
-            const ctx = cv.getContext('2d');
-            const S = 4;                       // simulation cell = 4 css px
-            let w, h, a, b, img;
-            let lastActive = 0, running = false;
-            let px = null, py = null;
-
-            function resize() {
-                w = Math.ceil(innerWidth / S) + 2;
-                h = Math.ceil(innerHeight / S) + 2;
-                cv.width = w; cv.height = h;
-                a = new Float32Array(w * h);
-                b = new Float32Array(w * h);
-                img = ctx.createImageData(w, h);
-            }
-
-            function drop(x, y, strength, r) {
-                const cx = Math.floor(x / S), cy = Math.floor(y / S);
-                for (let j = -r; j <= r; j++) {
-                    for (let i = -r; i <= r; i++) {
-                        const d = Math.sqrt(i * i + j * j);
-                        if (d > r) continue;
-                        const xx = cx + i, yy = cy + j;
-                        if (xx < 1 || yy < 1 || xx >= w - 1 || yy >= h - 1) continue;
-                        a[yy * w + xx] += strength * (1 - d / r);
-                    }
-                }
-                lastActive = performance.now();
-                if (!running) { running = true; requestAnimationFrame(frame); }
-            }
-
-            function frame(t) {
-                if (t - lastActive > 6000) { running = false; ctx.clearRect(0, 0, w, h); return; }
-
-                // wave propagation
-                for (let y = 1; y < h - 1; y++) {
-                    let i = y * w + 1;
-                    for (let x = 1; x < w - 1; x++, i++) {
-                        const n = (a[i - 1] + a[i + 1] + a[i - w] + a[i + w]) * 0.5 - b[i];
-                        b[i] = n * 0.978;
-                    }
-                }
-                const tmp = a; a = b; b = tmp;
-
-                // shading (light edge / dark edge, transparent when flat)
-                const d = img.data;
-                for (let y = 1; y < h - 1; y++) {
-                    let i = y * w + 1;
-                    for (let x = 1; x < w - 1; x++, i++) {
-                        const sx = a[i - 1] - a[i + 1];
-                        const sy = a[i - w] - a[i + w];
-                        const s = (sx + sy) * 0.5;
-                        const o = i * 4;
-                        if (s > 0) {
-                            d[o] = 255; d[o + 1] = 255; d[o + 2] = 255;
-                            d[o + 3] = Math.min(255, s * 9);
-                        } else {
-                            d[o] = 60; d[o + 1] = 74; d[o + 2] = 105;
-                            d[o + 3] = Math.min(150, -s * 5);
-                        }
-                    }
-                }
-                ctx.putImageData(img, 0, 0);
-                requestAnimationFrame(frame);
-            }
-
-            addEventListener('resize', resize);
-            resize();
-
-            addEventListener('pointermove', e => {
-                const x = e.clientX, y = e.clientY;
-                if (px === null) { px = x; py = y; }
-                const dx = x - px, dy = y - py;
-                const dist = Math.hypot(dx, dy);
-                const steps = Math.max(1, Math.ceil(dist / (S * 2)));
-                const speed = Math.min(1, dist / 40);
-                for (let k = 1; k <= steps; k++) {
-                    drop(px + dx * k / steps, py + dy * k / steps, 140 + 260 * speed, 3);
-                }
-                px = x; py = y;
-            }, { passive: true });
-            addEventListener('pointerdown', e => drop(e.clientX, e.clientY, 900, 5), { passive: true });
-            addEventListener('pointerleave', () => { px = py = null; });
-        })();
-
-        /* ================= Exam countdown ================= */
         const exams = [
-            { code: "২৩৩৬০১", name: "Sampling Distribution", dateStr: "২৫ নভেম্বর ২০২৬ • বুধবার • দুপুর ১:০০", targetDate: "2026-11-25T13:00:00+06:00" },
-            { code: "২৩৩৬০৩", name: "Statistical Inference", dateStr: "২৯ নভেম্বর ২০২৬ • রবিবার • দুপুর ১:০০", targetDate: "2026-11-29T13:00:00+06:00" },
-            { code: "২৩৩৬০৫", name: "Regression Analysis", dateStr: "২ ডিসেম্বর ২০২৬ • বুধবার • দুপুর ১:০০", targetDate: "2026-12-02T13:00:00+06:00" },
-            { code: "২৩৩৬০৭", name: "Design of Experiments", dateStr: "৬ ডিসেম্বর ২০২৬ • রবিবার • দুপুর ১:০০", targetDate: "2026-12-06T13:00:00+06:00" },
-            { code: "২৩৩৬০৯", name: "Applied Statistics", dateStr: "৯ ডিসেম্বর ২০২৬ • বুধবার • দুপুর ১:০০", targetDate: "2026-12-09T13:00:00+06:00" },
-            { code: "২৩৩৬১১", name: "Introduction to Computer and SPSS", dateStr: "১৩ ডিসেম্বর ২০২৬ • রবিবার • দুপুর ১:০০", targetDate: "2026-12-13T13:00:00+06:00" }
+            {
+                code: "২৩৩৬০১",
+                name: "Sampling Distribution",
+                dateStr: "২৫ নভেম্বর ২০২৬ • বুধবার • দুপুর ১:০০",
+                targetDate: "2026-11-25T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৩",
+                name: "Statistical Inference",
+                dateStr: "২৯ নভেম্বর ২০২৬ • রবিবার • দুপুর ১:০০",
+                targetDate: "2026-11-29T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৫",
+                name: "Regression Analysis",
+                dateStr: "২ ডিসেম্বর ২০২৬ • বুধবার • দুপুর ১:০০",
+                targetDate: "2026-12-02T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৭",
+                name: "Design of Experiments",
+                dateStr: "৬ ডিসেম্বর ২০২৬ • রবিবার • দুপুর ১:০০",
+                targetDate: "2026-12-06T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬০৯",
+                name: "Applied Statistics",
+                dateStr: "৯ ডিসেম্বর ২০২৬ • বুধবার • দুপুর ১:০০",
+                targetDate: "2026-12-09T13:00:00+06:00"
+            },
+            {
+                code: "২৩৩৬১১",
+                name: "Introduction to Computer and SPSS",
+                dateStr: "১৩ ডিসেম্বর ২০২৬ • রবিবার • দুপুর ১:০০",
+                targetDate: "2026-12-13T13:00:00+06:00"
+            }
         ];
 
+        // Convert English numbers to standard Bengali digits
         function toBengaliNum(num) {
-            const bengaliDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+            const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
             return num.toString().padStart(2, '0').replace(/\d/g, d => bengaliDigits[d]);
         }
 
+        // Render Cards Initial Layout
         function initLayout() {
             const container = document.getElementById('exam-container');
             container.innerHTML = exams.map((exam, index) => `
-                <div class="glass glass-card rounded-[30px] p-5 sm:p-6 enter" style="animation-delay:${index * 90 + 120}ms">
-                    <div class="relative z-10 space-y-5">
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div class="glass-card rounded-2xl p-5 sm:p-6 transition-all duration-300 relative overflow-hidden group">
+                    
+                    <!-- Progress Bar Background (Dynamic) -->
+                    <div id="progress-bar-${index}" class="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-yellow-300 transition-all duration-1000" style="width: 100%"></div>
 
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-2.5">
-                                    <span class="pill pill-amber px-3 py-1 font-number font-semibold text-xs tracking-wider"><span class="gt-sm-amber">${exam.code}</span></span>
-                                    <span id="badge-${index}" class="pill px-3 py-1 text-[11px] font-medium"><span class="gt-sm">অপেক্ষা করা হচ্ছে</span></span>
-                                </div>
-                                <h2 class="text-xl sm:text-2xl font-bold"><span class="gt">${exam.name}</span></h2>
-                                <div class="flex items-center gap-2 text-xs sm:text-sm gt-sm">
-                                    <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
-                                    <span>${exam.dateStr}</span>
-                                </div>
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+                        
+                        <!-- Exam Info -->
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-0.5 rounded-md bg-amber-400/10 border border-amber-400/20 text-amber-400 font-number font-semibold text-xs tracking-wider">
+                                    ${exam.code}
+                                </span>
+                                <span id="badge-${index}" class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">
+                                    অপেক্ষা করা হচ্ছে
+                                </span>
                             </div>
-
-                            <div id="timer-grid-${index}" class="grid grid-cols-4 gap-2 sm:gap-3 text-center w-full lg:w-auto"></div>
+                            <h2 class="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-300 transition-colors">
+                                ${exam.name}
+                            </h2>
+                            <div class="flex items-center gap-2 text-slate-400 text-xs sm:text-sm">
+                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>${exam.dateStr}</span>
+                            </div>
                         </div>
 
-                        <div class="track"><div id="progress-bar-${index}" class="fill" style="width:100%"></div></div>
+                        <!-- Live Timer Grid -->
+                        <div id="timer-grid-${index}" class="grid grid-cols-4 gap-2 sm:gap-3 text-center w-full lg:w-auto">
+                            <!-- Live numbers inserted via JS -->
+                        </div>
+
                     </div>
                 </div>
             `).join('');
-
-            container.querySelectorAll('.glass').forEach(el => {
-                el.addEventListener('pointermove', e => {
-                    const r = el.getBoundingClientRect();
-                    el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-                    el.style.setProperty('--my', (e.clientY - r.top) + 'px');
-                });
-                el.addEventListener('pointerleave', () => {
-                    el.style.setProperty('--mx', '20%');
-                    el.style.setProperty('--my', '0%');
-                });
-            });
         }
 
-        function timeBox(value, label, strong) {
-            return `
-                <div class="glass-sm p-2.5 sm:p-3 min-w-[62px] sm:min-w-[74px] flex flex-col items-center justify-center">
-                    <span class="relative z-10 text-xl sm:text-2xl font-extrabold font-number tracking-tight"><span class="gt ${strong ? 'gt-amber' : ''}">${value}</span></span>
-                    <span class="relative z-10 text-[10px] sm:text-[11px] font-medium mt-0.5 gt-sm">${label}</span>
-                </div>`;
-        }
-
-        function setBadge(badge, cls, cssText, text) {
-            badge.className = cls;
-            badge.innerHTML = `<span class="${cssText}">${text}</span>`;
-        }
-
+        // Live Timer Calculation Loop
         function updateCountdowns() {
-            const now = Date.now();
-            const totalAnnouncedTime = 60 * 24 * 60 * 60 * 1000;
+            const now = new Date().getTime();
+            const totalAnnouncedTime = 60 * 24 * 60 * 60 * 1000; // Reference range (60 days) for progress calculation
 
             exams.forEach((exam, index) => {
-                const diff = new Date(exam.targetDate).getTime() - now;
+                const target = new Date(exam.targetDate).getTime();
+                const diff = target - now;
 
                 const timerGrid = document.getElementById(`timer-grid-${index}`);
                 const progressBar = document.getElementById(`progress-bar-${index}`);
                 const badge = document.getElementById(`badge-${index}`);
+
                 if (!timerGrid) return;
 
+                // Progress Bar update
                 const percentage = Math.max(0, Math.min(100, (diff / totalAnnouncedTime) * 100));
                 if (progressBar) progressBar.style.width = `${percentage}%`;
 
+                // If Exam completed or currently live
                 if (diff <= 0) {
-                    if (diff > -14400000) {
-                        setBadge(badge, "pill pill-green px-3 py-1 text-[11px] font-medium animate-pulse", "gt-sm-green", "পরীক্ষা চলছে");
+                    if (diff > -14400000) { // Within 4 hours of exam start time
+                        badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 animate-pulse";
+                        badge.innerText = "পরীক্ষা চলছে";
                     } else {
-                        setBadge(badge, "pill px-3 py-1 text-[11px] font-medium", "gt-sm", "সম্পন্ন");
+                        badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-500";
+                        badge.innerText = "সম্পন্ন";
                     }
+
                     timerGrid.className = "w-full lg:w-auto flex items-center justify-center";
                     timerGrid.innerHTML = `
-                        <div class="pill pill-red w-full py-3 px-6 text-xs sm:text-sm font-semibold flex items-center justify-center gap-2">
+                        <div class="w-full bg-red-950/40 border border-red-800/50 text-red-300 py-3 px-6 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                            <span class="gt-sm-red">পরীক্ষার সময় অতিক্রান্ত হয়ে গেছে!</span>
-                        </div>`;
+                            পরীক্ষার সময় অতিক্রান্ত হয়ে গেছে!
+                        </div>
+                    `;
                     return;
                 }
 
-                if (diff < 86400000 * 3) {
-                    setBadge(badge, "pill pill-amber px-3 py-1 text-[11px] font-medium animate-pulse", "gt-sm-amber", "খুবই আসন্ন!");
+                // If upcoming
+                if (diff < 86400000 * 3) { // Less than 3 days remaining
+                    badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 animate-pulse";
+                    badge.innerText = "খুবই আসন্ন!";
                 } else {
-                    setBadge(badge, "pill px-3 py-1 text-[11px] font-medium", "gt-sm", "আসন্ন");
+                    badge.className = "text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400";
+                    badge.innerText = "আসন্ন";
                 }
 
-                const days = Math.floor(diff / 86400000);
-                const hours = Math.floor((diff % 86400000) / 3600000);
-                const minutes = Math.floor((diff % 3600000) / 60000);
-                const seconds = Math.floor((diff % 60000) / 1000);
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-                timerGrid.innerHTML =
-                    timeBox(toBengaliNum(days), 'দিন', false) +
-                    timeBox(toBengaliNum(hours), 'ঘণ্টা', false) +
-                    timeBox(toBengaliNum(minutes), 'মিনিট', false) +
-                    timeBox(toBengaliNum(seconds), 'সেকেন্ড', true);
+                timerGrid.innerHTML = `
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-300 tracking-tight">${toBengaliNum(days)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">দিন</span>
+                    </div>
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-300 tracking-tight">${toBengaliNum(hours)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">ঘণ্টা</span>
+                    </div>
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-300 tracking-tight">${toBengaliNum(minutes)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">মিনিট</span>
+                    </div>
+                    <div class="timer-box rounded-xl p-2.5 sm:p-3 min-w-[62px] sm:min-w-[72px] flex flex-col items-center justify-center transition-all border-amber-500/50 shadow-lg shadow-amber-500/5">
+                        <span class="text-xl sm:text-2xl font-extrabold font-number text-amber-400 tracking-tight">${toBengaliNum(seconds)}</span>
+                        <span class="text-[10px] sm:text-[11px] text-amber-200/70 font-medium mt-0.5">সেকেন্ড</span>
+                    </div>
+                `;
             });
         }
 
+        // Initialize App
         initLayout();
         updateCountdowns();
         setInterval(updateCountdowns, 1000);
